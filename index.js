@@ -1,19 +1,16 @@
 const express = require('express')
-require('dotenv').config()
-
-
-
 const app = express()
 
-const PORT = process.env.PORT
 
-app.use(express.json({extended: true}))
+require('dotenv').config()
+
+app.use(express.json())
 
 const connectDB = require("./connectMongo")
-const Item = require('./models/Item')
 
 connectDB()
 
+const Item = require('./models/Item')
 
 app.use('/api/items', async (req, res) => {
     try {
@@ -24,9 +21,10 @@ app.use('/api/items', async (req, res) => {
     }
 })
 
+const PORT = process.env.PORT
 
 app.listen(PORT, ()=> {
-    console.log(`Server has been started on server ${PORT}`)
+    console.log(`Server has been started on port ${PORT}`)
     } 
 )
 
