@@ -1,5 +1,4 @@
 const express = require('express')
-const cors = require('cors')
 require('dotenv').config()
 
 
@@ -11,11 +10,19 @@ const PORT = process.env.PORT
 app.use(express.json({extended: true}))
 
 const connectDB = require("./connectMongo")
+const Item = require('./models/Item')
 
 connectDB()
 
 
-app.use('/api/items', require("./routes/items.routes"))
+app.use('/api/items', async (req, res) => {
+    try {
+        const item = await Item.find()
+        res.json(item)
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 
 app.listen(PORT, ()=> {
