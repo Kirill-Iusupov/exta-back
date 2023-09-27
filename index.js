@@ -4,15 +4,18 @@ const cors = require('cors')
 require('dotenv').config()
 
 const MONGOURI = process.env.MONGOURI
-mongoose
-    .connect(MONGOURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-    .then(()=> console.log("DB ok"))
-    .catch((error)=> console.log("DB error => ",error))
 
-
+const databaseConnect = async () => {
+    try{
+        await mongoose
+        .connect(MONGOURI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+        console.log("DB ok");
+    }
+    catch (error) {console.log("DB error => ",error)}
+}
 
 
 
@@ -23,6 +26,8 @@ const PORT = process.env.PORT
 
 app.use(cors())
 app.use(express.json({extended: true}))
+
+databaseConnect()
 
 app.use('/api/items', require("./routes/items.routes"))
 
