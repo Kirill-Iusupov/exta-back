@@ -18,6 +18,7 @@ const databaseConnect = async () => {
 }
 
 
+databaseConnect()
 
 const app = express()
 
@@ -27,13 +28,28 @@ const PORT = process.env.PORT
 app.use(cors())
 app.use(express.json({extended: true}))
 
-databaseConnect()
+
 
 app.use('/api/items', require("./routes/items.routes"))
 
 
-app.listen(PORT, ()=> {
-    console.log(`Server has been started on server ${PORT}`)
-    } 
-)
+async function start () {
+    try {
+        await mongoose.connect(MONGOURI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModidy: true  
+        })
+        app.listen(PORT, () => console.log("Server has been started on port" + PORT))
+    }
+    catch (error) {
+        console.log("Server error: " + error)
+        process.exit(1)
+    }
+}
+
+start()
+
+
 
